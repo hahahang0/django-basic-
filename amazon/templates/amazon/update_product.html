@@ -1,0 +1,47 @@
+<form method="POST">
+
+    {% csrf_token %}
+
+    <input
+        type="text"
+        name="name"
+        value="{{ product.name }}"
+        placeholder="Product name"
+    >
+
+    <input
+        type="number"
+        name="price"
+        value="{{ product.price }}"
+        placeholder="Price"
+    >
+
+    <input
+        type="number"
+        name="stock"
+        value="{{ product.stock }}"
+        placeholder="Stock"
+    >
+
+    <select name="category_id" required>
+
+        {% for category in categories %}
+
+            <option
+                value="{{ category.id }}"
+                {% if category.id == product.category_id %}
+                    selected
+                {% endif %}
+            >
+                {{ category.name }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+    <button type="submit">
+        Update Product
+    </button>
+
+</form>

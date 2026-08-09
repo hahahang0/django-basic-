@@ -1,0 +1,74 @@
+1. product.objects.all() --> each row becomes python object 
+2. product.objects.values() --> returns data... in the form of dictionary 
+3. Product.objects.values("name","price") --> returns specific columns.
+
+Why Use values()?
+
+Imagine an API returning 100,000 products.
+
+Creating 100,000 Python model objects consumes more memory than returning plain dictionaries.
+
+This is one reason serializers and reporting endpoints often start with values().
+
+4. values_list() --> Product.objects.values_list("name",flat=True)
+5. Product.objects.only("name","price")
+6. Product.objects.defer('description) --> omits the description column.
+7. Aggregate() --> Product.objects.aggregate(sum('price')) --> Product.objects.aggregate(Avg("price"),Max("price"),Min("price"),Count("id"))
+8. Annotate() --> Customer.objects.annotate(total_orders=Count('Order'))
+9. F Expression --> 
+    from django.db.models import F
+    Product.objects.filter(id = 1).update(stock=F("stock")-1)
+10. Q objects --> 
+    from django.db.models import Q 
+    ### AND
+    Product.objects.filter(
+        Q(price__gt=500)
+        |
+        Q(stock__gt = 50)
+    )
+    ### OR
+    Q(price__gt=500)
+
+    &
+
+    Q(stock__gt=10)
+
+11. update() --> Product.objects.update(stock=0)
+12. buck_create() --> 
+    Product.objects.bulk_create([
+        Product(name="Laptop"),
+        Product(name="Mouse"),
+        Product(name="Keyboard")
+    ])
+
+13. bulk_update() --> 
+    Product.objects.bulk_update(
+        products,
+        ["price"]
+    )
+
+14. select_for_updates() --> 
+    from django.db import transaction
+
+    with transaction.atomic():
+
+    product = Product.objects.select_for_update().get(id=1)
+
+    if product.stock > 0:
+
+        product.stock -= 1
+
+        product.save()
+
+15. reverse_lookups --> author = Author.objects.get(id=1) --> author.post_set.all() --> used for reverse lookups.
+     or use 
+    author = models.ForeignKey(
+    Author,
+    on_delete=models.CASCADE,
+    related_name="posts"
+    )
+
+16. Find all the posts by John 
+    Post.objects.filter(
+        author__name="John"
+    )   

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+# from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse
@@ -43,4 +43,9 @@ context = {
 }
 
 def home(request):
-    return render(request,'home.html',context)
+    return render(request,'blog/home.html',context)
+
+def hello(request):
+    print(request.method)
+    return HttpResponse("Hello Hello, This is hangthim limbu and i am back !")
+

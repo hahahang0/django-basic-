@@ -124,3 +124,20 @@ def update_product(request,id):
 
     )
 
+def delete_product(request,id):
+    product = get_object_or_404(
+        Product,
+        id = id 
+    )
+    if request.method == "POST":
+        product.delete()
+        return redirect("product-list")
+
+    return render(
+        request,
+        "amazon/delete_product.html",
+        {
+            "product":product,
+        }
+    )
+

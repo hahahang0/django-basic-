@@ -21,6 +21,8 @@
         </p>
     </div>
     <a href="{% url 'update_product' product.id %}">Edit</a>
+    <a href="{% url 'delete_product' product.id %}">Delete</a>
+    
     {% empty %}
     <p>No products available. </p>
 

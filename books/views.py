@@ -16,14 +16,24 @@ class BookListCreateView(APIView):
             books,
             many = True
         )
-        return Response(serializer.data)
+        return Response(
+            {
+                
+                
+            "data":serializer.data
+            })
 
     def post(self,request):
         serializer = BookSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(
-            serializer.data,status=status.HTTP_201_CREATED
+            {
+            "data":serializer.data,
+            "message" : "Book created successfully"
+
+            }
+            status=status.HTTP_201_CREATED
         )
 
 

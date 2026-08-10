@@ -1,13 +1,16 @@
+from datetime import date
+
 from rest_framework import serializers
-from .models import Book 
-from datetime import date 
+
+from .models import Book
+
 
 class BookSerializer(serializers.ModelSerializer):
-    class Meta:
-        
-        model = Book 
 
-        fields  = [
+    class Meta:
+        model = Book
+
+        fields = [
             "id",
             "title",
             "author",
@@ -18,62 +21,58 @@ class BookSerializer(serializers.ModelSerializer):
             "created_at",
         ]
 
-        read_only_field = [
+        read_only_fields = [
             "id",
             "created_at",
         ]
 
-        def validate_title(self,value):
-            if len(value.strip()) < 3:
-                raise serializers.ValidationError(
-                    "Title must contain at least 3 characters."
-                )
-            return value
+    # Field-level validation
+    def validate_title(self, value):
+        if len(value.strip()) < 3:
+            raise serializers.ValidationError(
+                "Title must contain at least 3 characters."
+            )
 
-        def validate_price(self,value):
-            if value < 0:
-                raise serializers.ValidationError(
-                    "Price cannot be negative."
-                )
-                
-            return value;
-        
-        def validate_published_year(self,value):
-            current_year = date.today().year
-            if value<0:
-                raise serializers.ValidationError(
-                    "Published year must be positive."
-                )
-            if value>current_year:
-                raise serializers.ValidationError(
-                    "Published year cannot be in the future."
-                )
+        return value
 
-            return value
+    def validate_price(self, value):
+        if value < 0:
+            raise serializers.ValidationError(
+                "Price cannot be negative."
+            )
 
-# object level validation
+        return value
 
-        # def validate(self,attrs):
-        #     author = attrs.get('author')
-        #     is_available = attrs.get("is_available")
+    def validate_published_year(self, value):
+        current_year = date.today().year
 
-        #     if is_available and not author : 
-        #         raise serializers.ValidationError(
-        #             "An available book must have an author."
-        #         )
+        if value < 0:
+            raise serializers.ValidationError(
+                "Published year must be positive."
+            )
 
-        #     return attrs 
-        def validate(self, attrs):
+        if value > current_year:
+            raise serializers.ValidationError(
+                "Published year cannot be in the future."
+            )
 
-            if (
-                attrs.get("is_available")
-                and not attrs.get("author")
-            ):
+        return value
 
-                raise serializers.ValidationError(
-                    "An available book must have an author."
-                )
+    # Object-level validation
+    def validate(self, attrs):
+        author = attrs.get(
+            "author",
+            getattr(self.instance, "author", None)
+        )
 
-            return attrs
+        is_available = attrs.get(
+            "is_available",
+            getattr(self.instance, "is_available", False)
+        )
 
-# field validation --> one validation , object validation --> multiple validation
+        if is_available and not author:
+            raise serializers.ValidationError(
+                "An available book must have an author."
+            )
+
+        return attrs

@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'blog',
     'amazon',
     'library',
-    'accounts'
+    'accounts',
+    'books',
+    
 ]
 
 MIDDLEWARE = [

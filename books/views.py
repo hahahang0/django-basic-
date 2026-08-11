@@ -30,9 +30,8 @@ class BookListCreateView(APIView):
         return Response(
             {
             "data":serializer.data,
-            "message" : "Book created successfully"
-
-            }
+            "message" : "Book created successfully",
+            },
             status=status.HTTP_201_CREATED
         )
 

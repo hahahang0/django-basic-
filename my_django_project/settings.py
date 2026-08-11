@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'accounts',
     'books',
     'products',
-    
+    'dictionary',
+
     
 ]
 

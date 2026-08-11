@@ -24,6 +24,7 @@ urlpatterns = [
     path('amazon/',include('amazon.urls')),
     path('library/',include('library.urls')),
     path('accounts/',include('accounts.urls')),
-    path('api/',include('books.urls'))
+    path('api/',include('books.urls')),
+    path('api/',include('products.urls')),
     
 ]

@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'library',
     'accounts',
     'books',
+    'products',
+    
     
 ]
 

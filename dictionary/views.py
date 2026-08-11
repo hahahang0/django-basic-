@@ -73,6 +73,9 @@ from .models import Book
 from .serializers import BookSerializer
 from rest_framework.decorators import action
 from .pagination import BookLimitOffsetPagination, BookPagination
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import BookFilter
+from rest_framework.filters import (SearchFilter,OrderingFilter)
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -90,7 +93,38 @@ class BookViewSet(viewsets.ModelViewSet):
     ### get_queryset() --> custom get query set 
 
     def get_queryset(self):
-        return Book.objects.filter(is_available=True)
+        # return Book.objects.filter(is_available=True)
+        queryset = Book.objects.all()
+        author = self.request.query_params.get("author")
+        if author: 
+            queryset = queryset.filter(
+                author = author 
+            )
+
+        return queryset 
+    
+    filter_backends = [
+        DjangoFilterBackend,
+        OrderingFilter,
+        SearchFilter,
+    ]
+    filterset_class = BookFilter
+    search_fields = [
+        "title",
+        "author",
+    ]
+    ordering_fields = [
+        "title",
+        "price",
+        "published_year",
+        "created_at",
+    ]
+
+        # filterset_fields = [
+        #     "author",
+        #     "published_year",
+        #     "is_available",
+        # ]
 
     ### we can also use custom action in ViewSet
     # if we want to return only available books

@@ -9,9 +9,9 @@ from .permissions import IsAuthorOrReadOnly
 # Create your views here.
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.object().all().order_by("-created_at")
+    queryset = Post.objects.all().order_by("-created_at")
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly,IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     def perform_create(self, serializer):
         # return super().perform_create(serializer)
         serializer.save(

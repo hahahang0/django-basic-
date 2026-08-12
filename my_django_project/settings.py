@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'books',
     'products',
     'dictionary',
+    'journals',
 
     
 ]

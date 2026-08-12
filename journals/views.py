@@ -5,6 +5,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated,IsAuthenticated
 from .models import Post 
 from .serailizers import PostSerializer
 from .permissions import IsAuthorOrReadOnly
+from rest_framework.views import APIView
+from django.core.cache import cache
+from rest_framework.response import Response
 
 # Create your views here.
 
@@ -32,3 +35,14 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer.save(
             author = self.request.user
         )
+
+
+class BlogStatsView(APIView):
+    def get(self,request):
+        count = cache.get("published-post-count")
+        if count is None:
+            count = Post.objects.published().count()
+            cache.set("published-post-count",count,300)
+        return Response({
+            "published_posts" : count
+        })

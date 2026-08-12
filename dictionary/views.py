@@ -81,6 +81,7 @@ from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOwnerOrReadOnly
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -128,8 +129,9 @@ class BookViewSet(viewsets.ModelViewSet):
     ]
 
     authentication_classes=[
-        SessionAuthentication,
-        TokenAuthentication,
+        # SessionAuthentication,
+        # TokenAuthentication,
+        JWTAuthentication,
     ]
     permission_classes=[
         IsAuthenticated,
@@ -149,11 +151,11 @@ class BookViewSet(viewsets.ModelViewSet):
         methods = ["get"]
     )
 
-    def who_am_i(self,request):
-        return Response({
-            "username" : request.user.username,
-            "authenticated" : request.user.is_authenticated,
-        })
+    # def who_am_i(self,request):
+    #     return Response({
+    #         "username" : request.user.username,
+    #         "authenticated" : request.user.is_authenticated,
+    #     })
 
     def available(self,request):
         books = Book.objects.filter(

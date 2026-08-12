@@ -21,6 +21,16 @@ class Post(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True
     )
+    cover_image = models.ImageField(
+        upload_to='post/',
+        blank=True,
+        null=True
+    )
+    attachment = models.FileField(
+        upload_to = 'post_files/',
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return self.title

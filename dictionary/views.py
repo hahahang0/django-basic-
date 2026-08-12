@@ -78,7 +78,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .filters import BookFilter
 from rest_framework.filters import (SearchFilter,OrderingFilter)
 from rest_framework.response import Response
-from rest_framework.authentication import SessionAuthentication
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOwnerOrReadOnly
 
@@ -128,7 +128,8 @@ class BookViewSet(viewsets.ModelViewSet):
     ]
 
     authentication_classes=[
-        SessionAuthentication
+        SessionAuthentication,
+        TokenAuthentication,
     ]
     permission_classes=[
         IsAuthenticated,

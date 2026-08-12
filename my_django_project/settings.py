@@ -9,24 +9,36 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+import environ
 from pathlib import Path
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+env.read_env(
+    BASE_DIR / ".env"
+)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-f1m7@d^dtv4x(n=!c_jv0ehp(07gvrhj_za*d%%hn%*@n7ey*n'
+# SECRET_KEY = 'django-insecure-f1m7@d^dtv4x(n=!c_jv0ehp(07gvrhj_za*d%%hn%*@n7ey*n'
+SECRET_KEY = env(
+    "SECRET_KEY"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env(
+    "DEBUG"
+)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list(
+    "ALLOWED_HOSTS"
+)
 
 
 # Application definition
@@ -38,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
@@ -56,6 +69,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'journals.middleware.RequestLogMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,6 +78,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+CORS_ALLOWED_ORIGINS = env.list(
+    "CORS_ALLOWED_ORIGINS"
+)
 
 ROOT_URLCONF = 'my_django_project.urls'
 
@@ -95,11 +112,11 @@ DATABASES = {
     # }
     'default' : {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "my_django_db",
-        "USER": "postgres",
-        "PASSWORD": "hangtang@123hL",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": env("DB_HOST"),
+        "PORT": env("DB_PORT"),
     }
 }
 
@@ -160,14 +177,25 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'accounts.User'
+# SIMPLE_JWT = {
+
+#     "ACCESS_TOKEN_LIFETIME": timedelta(
+#         minutes=5
+#     ),
+
+#     "REFRESH_TOKEN_LIFETIME": timedelta(
+#         days=1
+#     ),
+# }
+
 SIMPLE_JWT = {
 
     "ACCESS_TOKEN_LIFETIME": timedelta(
-        minutes=5
+        minutes=env.int("JWT_ACCESS_MINUTES")
     ),
 
     "REFRESH_TOKEN_LIFETIME": timedelta(
-        days=1
+        days=env.int("JWT_REFRESH_DAYS")
     ),
 }
 

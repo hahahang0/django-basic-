@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'amazon',
     'library',
     'accounts',
+    'drf_spectacular',
     'books',
     'products',
     'dictionary',
@@ -135,6 +136,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 REST_FRAMEWORK = {
+
+    "DEFAULT_SCHEMA_CLASS":
+        "drf_spectacular.openapi.AutoSchema",
+        
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
     ],

@@ -11,7 +11,10 @@ class BookSerializer(serializers.ModelSerializer):
             "price",
             "published_year",
             "is_available",
+            'owner',
         ]
         read_only_fields=[
-            "id"
+            "id",
+            'owner',
+            # 'created_at'
         ]

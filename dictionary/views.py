@@ -68,6 +68,7 @@
 
 ####### FROM HERE WE ARE USING VIEWSET ######### 
 
+# from requests import Session
 from rest_framework import viewsets
 from .models import Book
 from .serializers import BookSerializer
@@ -76,6 +77,10 @@ from .pagination import BookLimitOffsetPagination, BookPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import BookFilter
 from rest_framework.filters import (SearchFilter,OrderingFilter)
+from rest_framework.response import Response
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsOwnerOrReadOnly
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -88,7 +93,9 @@ class BookViewSet(viewsets.ModelViewSet):
 
     def perform_create(self,serializer):
         print("Create a new book.")
-        serializer.save()
+        serializer.save(
+            owner = self.request.user
+        )
 
     ### get_queryset() --> custom get query set 
 
@@ -120,6 +127,14 @@ class BookViewSet(viewsets.ModelViewSet):
         "created_at",
     ]
 
+    authentication_classes=[
+        SessionAuthentication
+    ]
+    permission_classes=[
+        IsAuthenticated,
+        IsOwnerOrReadOnly,
+    ]
+
         # filterset_fields = [
         #     "author",
         #     "published_year",
@@ -132,6 +147,12 @@ class BookViewSet(viewsets.ModelViewSet):
         detail = False, 
         methods = ["get"]
     )
+
+    def who_am_i(self,request):
+        return Response({
+            "username" : request.user.username,
+            "authenticated" : request.user.is_authenticated,
+        })
 
     def available(self,request):
         books = Book.objects.filter(

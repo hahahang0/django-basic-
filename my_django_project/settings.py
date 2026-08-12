@@ -148,3 +148,5 @@ REST_FRAMEWORK = {
 
     "PAGE_SIZE": 10,
 }
+
+AUTH_USER_MODEL = 'accounts.User'

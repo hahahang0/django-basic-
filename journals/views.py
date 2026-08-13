@@ -8,6 +8,7 @@ from .permissions import IsAuthorOrReadOnly
 from rest_framework.views import APIView
 from django.core.cache import cache
 from rest_framework.response import Response
+import logging
 
 # Create your views here.
 
@@ -22,6 +23,7 @@ from rest_framework.response import Response
 #             author=self.request.user
 #         )
 
+logger = logging.getLogger(__name__)
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -32,8 +34,13 @@ class PostViewSet(viewsets.ModelViewSet):
             queryset = queryset.published()
         return queryset 
     def perform_create(self,serializer):
-        serializer.save(
+        post = serializer.save(
             author = self.request.user
+        )
+        logger.info(
+            "Post Created: id = %s by user = %s",
+            post.id ,
+            self.request.user.id
         )
 
 

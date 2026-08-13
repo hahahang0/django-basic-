@@ -12,6 +12,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView 
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import LoginSerializer, RegisterSerializer
+import logging 
+logger = logging.getLogger(__name__)
 
 
 class RegisterView(APIView):
@@ -75,6 +77,14 @@ class LoginView(APIView):
             request,
             user
         )
+        logger.warning(
+        "Failed login attempt : username=%s",
+        username
+        )
+        logger.info(
+            "Successful login: user=%s",
+            user.username,
+        )
 
         return Response({
             "message" : "Login Successful.",
@@ -89,6 +99,7 @@ class LogoutView(APIView):
         return Response({
             "message" : "Logout Successful."
         })
+   
 
 class MeView(APIView):
     permission_classes=[
